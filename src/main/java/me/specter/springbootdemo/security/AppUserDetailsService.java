@@ -22,7 +22,9 @@ public class AppUserDetailsService implements UserDetailsService{
         return appUserRepository
         .findByEmail(username)
             .orElseThrow(
-                () -> new UsernameNotFoundException("User with email=%s is not found".formatted(username))
+                () -> new UsernameNotFoundException(
+                    "User with email=%s is not found".formatted(username)
+                )
             );
 
     }

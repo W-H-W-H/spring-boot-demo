@@ -50,7 +50,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
 
-        AppUser user = AppUser.builder()
+        AppUser user = AppUser.builder
         .setId(null)
         .setEmail(request.email())
         .setDisplayName(request.displayName())
@@ -74,7 +74,9 @@ public class AuthenticationService {
 
         AppUser user = appUserRepository
             .findByEmail(request.email())
-            .orElseThrow(() -> new UserNotFoundException("User with email=%s is not found".formatted(request.email())));     
+            .orElseThrow(
+                () -> new UserNotFoundException("User with email=%s is not found".formatted(request.email()))
+            );     
         String jwtAccessToken = jwtService.generateAccessToken(user);
         String jwtRefreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
@@ -124,7 +126,12 @@ public class AuthenticationService {
         refreshToken = authHeader.substring(7);
         userEmail = jwtService.extractUsername(refreshToken);
         if (userEmail != null) {
-        var user = appUserRepository.findByEmail(userEmail).orElseThrow();
+        AppUser user = appUserRepository
+            .findByEmail(userEmail)
+            .orElseThrow(() -> new UserNotFoundException(
+                "User with email %s is not found".formatted(userEmail)
+                )
+            );
         if (jwtService.validateToken(refreshToken, user)) {
             String accessToken = jwtService.generateAccessToken(user);
             revokeAllUserTokens(user);

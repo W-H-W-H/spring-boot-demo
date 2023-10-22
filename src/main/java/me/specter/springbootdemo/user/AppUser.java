@@ -22,8 +22,6 @@ import me.specter.springbootdemo.token.Token;
 @Entity
 public class AppUser implements UserDetails{
 
-    private static final AppUserBuilder builder = new AppUserBuilder();
-
     // @AllArgsConstructor
     public AppUser(Integer id, String email, String displayName, String password, boolean isEnabled, Role role) {
         this.id = id;
@@ -60,7 +58,52 @@ public class AppUser implements UserDetails{
     private Role role;
 
     @OneToMany(mappedBy = "user") // mappedBy <#Token Bean's Field name#>
-    private List<Token> token;
+    private List<Token> tokens;
+
+    public static final Builder builder = new Builder();
+
+    public static final class Builder{
+        private Integer id;
+        private String email;
+        private String displayName;
+        private String password;
+        private boolean isEnabled;
+        private Role role;
+
+        public Builder setId(Integer id) {
+            this.id = id;
+            return this;
+        }
+    
+        public Builder setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+    
+        public Builder setDisplayName(String displayName) {
+            this.displayName = displayName;
+            return this;
+        }
+    
+        public Builder setPassword(String password) {
+            this.password = password;
+            return this;
+        }
+    
+        public Builder setIsEnabled(boolean isEnabled) {
+            this.isEnabled = isEnabled;
+            return this;
+        }
+    
+        public Builder setRole(Role role) {
+            this.role = role;
+            return this;
+        }
+    
+        public AppUser build(){
+            return new AppUser(id, email, displayName, password, isEnabled, role);
+        }
+    }
 
     // @Getter
     public Integer getId() {
@@ -106,16 +149,6 @@ public class AppUser implements UserDetails{
 
     public void setRole(Role role){
         this.role = role;
-    }
-
-    public static AppUserBuilder builder(){
-        return builder
-        .setId(null)
-        .setEmail(null)
-        .setDisplayName(null)
-        .setPassword(null)
-        .setIsEnabled(false)
-        .setRole(Role.USER);
     }
 
     // Methods from UserDetails

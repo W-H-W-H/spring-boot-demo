@@ -9,11 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import me.specter.springbootdemo.token.TokenRepository;
 
 @Component
-public class LogoutHandlerImpl implements LogoutHandler{
+public class LogoutHandlerComponent implements LogoutHandler{
 
     private final TokenRepository tokenRepository;
 
-    public LogoutHandlerImpl(TokenRepository tokenRepository){
+    public LogoutHandlerComponent(TokenRepository tokenRepository){
         this.tokenRepository = tokenRepository;
     }
 
