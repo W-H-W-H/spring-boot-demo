@@ -152,6 +152,7 @@ public class AppUser implements UserDetails{
     }
 
     // Methods from UserDetails
+    // We must add prefix "ROLE_"
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(

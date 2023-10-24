@@ -42,16 +42,5 @@ public class AppUserService {
             throw new UserNotFoundException("User with email(%s) is not found".formatted(email));
         }
     }
-
-    public void createUser(AppUser user){
-        String email = user.getEmail();
-
-        if (appUserRepository.findByEmail(email).isPresent() ){
-            throw new RuntimeException("User Email(%s) already exist".formatted(email));
-        }
-
-        user.setId(null);
-        user.setIsEnabled(false);
-        appUserRepository.save(user);
-    }
+    
 }

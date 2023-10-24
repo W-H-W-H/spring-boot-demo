@@ -13,7 +13,7 @@ public class Welcome {
         return "Welcome";
     }
 
-    @GetMapping("/welcome-with-authen")
+    @GetMapping("/with-authen")
     public String welcomeWithAuthen(){
         return "Welcome With Authen";
     }
