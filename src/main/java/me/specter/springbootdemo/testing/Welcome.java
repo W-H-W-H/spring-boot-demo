@@ -1,4 +1,4 @@
-package me.specter.springbootdemo.welcome;
+package me.specter.springbootdemo.testing;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

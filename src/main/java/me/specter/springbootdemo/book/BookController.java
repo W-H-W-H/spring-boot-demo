@@ -48,22 +48,22 @@ public class BookController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> createBook(@RequestBody @Valid Book book){ 
         bookService.createBook(book);
         return ResponseEntity.created(null).build();
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> deleteBook(@PathVariable String id){
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public void putMethodName(@RequestBody Book book) {    
+    @PreAuthorize("hasRole('MANAGER')")
+    public void updateBook(@RequestBody Book book) {    
         bookService.updateBook(book);
     }
 

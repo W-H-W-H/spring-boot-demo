@@ -30,7 +30,8 @@ public class LogoutHandlerComponent implements LogoutHandler{
         }
         jwtToken = authHeader.substring(7);
         
-        tokenRepository.findByToken(jwtToken).stream()
+        tokenRepository.findByToken(jwtToken)
+            .stream()
             .forEach( 
                 t -> {
                     t.setIsExpired(true);

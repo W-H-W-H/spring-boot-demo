@@ -2,34 +2,39 @@ package me.specter.springbootdemo.user;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import me.specter.springbootdemo.role.AppRole;
 import me.specter.springbootdemo.token.Token;
 
 @Entity
 public class AppUser implements UserDetails{
 
     // @AllArgsConstructor
-    public AppUser(Integer id, String email, String displayName, String password, boolean isEnabled, Role role) {
+    public AppUser(Integer id, String email, String displayName, String password, boolean isEnabled, Set<AppRole> roles) {
         this.id = id;
         this.email = email;
         this.displayName = displayName;
         this.password = password;
         this.isEnabled = isEnabled;
-        this.role = role;
+        this.roles = roles;
     }
 
     // @NoArgsConstructor
@@ -38,7 +43,7 @@ public class AppUser implements UserDetails{
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Email(message = "Email format is not valid")
@@ -54,10 +59,16 @@ public class AppUser implements UserDetails{
 
     private boolean isEnabled;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    // If NOT EAGER, failed when do getAuthorities() otherwise
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "app_user_role",
+        joinColumns = @JoinColumn(name = "app_user_id"),
+        inverseJoinColumns = @JoinColumn(name = "app_role_id")
+    )
+    private Set<AppRole> roles;
 
-    @OneToMany(mappedBy = "user") // mappedBy <#Token Bean's Field name#>
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user") // mappedBy <#Token Bean's Field name#>
     private List<Token> tokens;
 
     public static final Builder builder = new Builder();
@@ -68,7 +79,7 @@ public class AppUser implements UserDetails{
         private String displayName;
         private String password;
         private boolean isEnabled;
-        private Role role;
+        private Set<AppRole> roles;
 
         public Builder setId(Integer id) {
             this.id = id;
@@ -95,13 +106,13 @@ public class AppUser implements UserDetails{
             return this;
         }
     
-        public Builder setRole(Role role) {
-            this.role = role;
+        public Builder setRoles(Set<AppRole> roles) {
+            this.roles = roles;
             return this;
         }
     
         public AppUser build(){
-            return new AppUser(id, email, displayName, password, isEnabled, role);
+            return new AppUser(id, email, displayName, password, isEnabled, roles);
         }
     }
 
@@ -122,8 +133,8 @@ public class AppUser implements UserDetails{
         return this.isEnabled;
     }
 
-    public Role getRole(){
-        return this.getRole();
+    public Set<AppRole> getRoles(){
+        return this.roles;
     }
 
     // @Setter
@@ -147,17 +158,19 @@ public class AppUser implements UserDetails{
         this.isEnabled = isEnabled;
     }
 
-    public void setRole(Role role){
-        this.role = role;
+    public void setRole(Set<AppRole> roles){
+        this.roles = roles;
     }
 
     // Methods from UserDetails
     // We must add prefix "ROLE_"
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(
-            new SimpleGrantedAuthority("ROLE_" + role.name())
-        );
+        return roles
+            .stream()
+            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName()))
+            .toList()
+        ;
     }
 
     @Override

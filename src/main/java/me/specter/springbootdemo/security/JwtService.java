@@ -52,6 +52,13 @@ public class JwtService {
         final Date expiration = extractClaims(token, Claims::getExpiration);
         final Date issuedAt = extractClaims(token, Claims::getIssuedAt);
         final Date now = new Date();
+
+        System.out.println(
+            username.equals(userDetails.getUsername()) 
+            && now.before(expiration) 
+            && now.after(issuedAt)
+        );
+
         return username.equals(userDetails.getUsername()) 
             && now.before(expiration) 
             && now.after(issuedAt)

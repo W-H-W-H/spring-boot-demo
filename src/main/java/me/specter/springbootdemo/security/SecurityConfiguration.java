@@ -46,7 +46,7 @@ public class SecurityConfiguration {
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests( req -> 
             req
-            .requestMatchers("api/v1/auth/**", "api/v1/welcome/**").permitAll()
+            .requestMatchers("api/v1/auth/**", "api/v1/welcome/**", "/api/v1/crud-test/**").permitAll()
             .anyRequest().authenticated()
         )
         .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
@@ -83,7 +83,4 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    public static void main(String [] args){
-        System.out.println(new BCryptPasswordEncoder().encode("dummypassword"));
-    }
 }

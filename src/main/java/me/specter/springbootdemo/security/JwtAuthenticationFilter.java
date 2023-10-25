@@ -64,13 +64,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .map(t -> !t.getIsExpired() && !t.getIsRevoked())
                     .orElse(false);
                 if(isTokenInDatabaseValid && jwtService.validateToken(jwtToken, userDetails)){
+                    System.out.println("[SPTR]: userDetails.getAuthorities()=%s".formatted(userDetails.getAuthorities()));
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
                         userDetails.getAuthorities()
                     );
 
-                    System.out.println("[SPTR]: userDetails.getAuthorities()=%s".formatted(userDetails.getAuthorities()));
+                    
 
                     // pass more information to authentication token
                     authToken.setDetails(
@@ -81,7 +82,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         }catch(RuntimeException e){
-
+            System.out.println("catch Exception: " + e.getMessage());
         }
 
         System.out.println("[SPTR]: Continue to filter");

@@ -4,14 +4,14 @@ spring:
         url: jdbc:mysql://localhost:3306/simple-library
         username: simple-library-user
         password: dummypassword
-    #sql:
-        #init:
-            #mode: always
+    sql:
+        init:
+            mode: always
     # == Spring Data JPA ==
     jpa:
         show-sql: true
         hibernate:
-            ddl-auto: update
+            ddl-auto: create-drop # create-drop # udpate
         defer-datasource-initialization: true
         properties:
             hibernate:
