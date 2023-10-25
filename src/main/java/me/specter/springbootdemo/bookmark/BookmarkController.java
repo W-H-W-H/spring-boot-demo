@@ -23,7 +23,7 @@ public class BookmarkController {
         this.bookmarkService = bookmarkService;
     }
 
-    @GetMapping // Check User name
+    @GetMapping
     @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #request.userEmail() == authentication.name)")
     public List<Book> findAllBookmarks(@RequestBody BookmarkRequest request){
         return this.bookmarkService.findBookmarkedBook(request.userEmail());
