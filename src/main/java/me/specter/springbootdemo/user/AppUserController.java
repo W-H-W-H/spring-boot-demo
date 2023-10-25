@@ -2,6 +2,7 @@ package me.specter.springbootdemo.user;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,8 @@ public class AppUserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    @PostAuthorize("hasRole('ADMIN') or returnObject.email == authentication.name")
     public AppUserDto findUserById(@PathVariable Integer id){
         return appUserService.findUserById(id);
     }
