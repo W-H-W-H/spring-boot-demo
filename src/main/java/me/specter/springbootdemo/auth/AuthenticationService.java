@@ -58,7 +58,7 @@ public class AuthenticationService {
 
         AppUser user = AppUser.builder
         .setId(null)
-        .setEmail(request.email())
+        .setEmail(request.userEmail())
         .setDisplayName(request.displayName())
         .setPassword(passwordEncoder.encode(request.password()))
         .setIsEnabled(true)
@@ -79,13 +79,13 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.email(), request.password())
+            new UsernamePasswordAuthenticationToken(request.userEmail(), request.password())
         );
 
         AppUser user = appUserRepository
-            .findByEmail(request.email())
+            .findByEmail(request.userEmail())
             .orElseThrow(
-                () -> new UserNotFoundException("User with email=%s is not found".formatted(request.email()))
+                () -> new UserNotFoundException("User with email=%s is not found".formatted(request.userEmail()))
             );     
         String jwtAccessToken = jwtService.generateAccessToken(user);
         String jwtRefreshToken = jwtService.generateRefreshToken(user);

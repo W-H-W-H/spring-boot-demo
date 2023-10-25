@@ -1,5 +1,5 @@
 package me.specter.springbootdemo.auth;
 
-public record AuthenticationRequest(String email, String password) {
+public record AuthenticationRequest(String userEmail, String password) {
     
 }

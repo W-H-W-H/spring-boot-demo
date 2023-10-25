@@ -88,8 +88,8 @@ public class CrudTesting {
 
     @PostMapping("/bookmarks")
     public void addBookmarks(){
-         bookmarkService.addBookmark(1, "B00001");
-         bookmarkService.addBookmark(1, "B00002");
+         bookmarkService.addBookmark(2, "B00001");
+         bookmarkService.addBookmark(2, "B00002");
     }
 
     @DeleteMapping("/bookmarks")
