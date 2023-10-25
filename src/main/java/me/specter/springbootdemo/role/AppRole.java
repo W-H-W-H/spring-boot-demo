@@ -1,5 +1,7 @@
 package me.specter.springbootdemo.role;
 
+import java.util.function.Function;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -37,5 +39,15 @@ public class AppRole {
         return this.roleName;
     }
 
-    
+    public static Function<String, RoleName> mapper = 
+        (roleNameInString) -> {
+
+            if(roleNameInString.equalsIgnoreCase("ADMIN")){
+                return RoleName.ADMIN;
+            }else if(roleNameInString.equalsIgnoreCase("MANAGER")){
+                return RoleName.MANAGER;
+            }else{
+                return RoleName.USER;
+            }
+        };
 }

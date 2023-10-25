@@ -1,11 +1,19 @@
 package me.specter.springbootdemo.book;
 
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import me.specter.springbootdemo.bookmark.Bookmark;
 
 @Entity
 public class Book {
@@ -19,6 +27,10 @@ public class Book {
 
     @NotBlank
     private String isbn;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book", fetch = FetchType.LAZY)
+    @JsonIgnore // Use JsonIgnore to aviod infinite recursion
+    private List<Bookmark> bookmarks;
 
     // @NoArgsConstructor
     public Book(){
@@ -45,6 +57,10 @@ public class Book {
         return this.isbn;
     }
 
+    public List<Bookmark> getBookmarks() {
+        return bookmarks;
+    }
+
     // @Setter
     public void setId(String id){
         this.id = id;
@@ -55,6 +71,10 @@ public class Book {
     }
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public void setBookmarks(List<Bookmark> bookmark) {
+        this.bookmarks = bookmark;
     }
 
 }

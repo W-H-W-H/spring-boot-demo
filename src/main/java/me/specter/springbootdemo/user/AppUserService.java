@@ -42,5 +42,15 @@ public class AppUserService {
             throw new UserNotFoundException("User with email(%s) is not found".formatted(email));
         }
     }
+
+    public void changeIsEnabled(Integer id, Boolean isEnabled) {
+        AppUser user =  appUserRepository
+            .findById(id)
+            .orElseThrow(
+                () ->new UserNotFoundException("User with id(%s) is not found".formatted(id))
+            );
+        user.setIsEnabled(isEnabled);
+        this.appUserRepository.save(user);
+    }
     
 }

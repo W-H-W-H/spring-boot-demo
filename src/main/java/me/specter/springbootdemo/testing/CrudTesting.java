@@ -1,13 +1,22 @@
 package me.specter.springbootdemo.testing;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.persistence.EntityManager;
+import me.specter.springbootdemo.book.Book;
+import me.specter.springbootdemo.book.BookRepository;
+import me.specter.springbootdemo.bookmark.Bookmark;
+import me.specter.springbootdemo.bookmark.BookmarkRepository;
+import me.specter.springbootdemo.bookmark.BookmarkService;
 import me.specter.springbootdemo.role.AppRole;
 import me.specter.springbootdemo.role.AppRoleRepository;
 import me.specter.springbootdemo.token.Token;
@@ -21,15 +30,29 @@ public class CrudTesting {
     private final AppRoleRepository appRoleRepository;
     private final AppUserRepository appUserRepository;
     private final TokenRepository tokenRepository;
+    private final BookRepository bookRepository;
+    private final BookmarkRepository bookmarkRepository;
+    private final BookmarkService bookmarkService;
 
     public CrudTesting(
         AppRoleRepository appRoleRepository, 
         AppUserRepository appUserRepository,
-        TokenRepository tokenRepository
+        TokenRepository tokenRepository,
+        BookRepository bookRepository,
+        BookmarkRepository bookmarkRepository,
+        BookmarkService bookmarkService
     ){
         this.appUserRepository = appUserRepository;
         this.appRoleRepository = appRoleRepository;
         this.tokenRepository = tokenRepository;
+        this.bookRepository = bookRepository;
+        this.bookmarkRepository = bookmarkRepository;
+        this.bookmarkService = bookmarkService;
+    }
+
+    @GetMapping("/roles")
+    public List<AppRole> getAllRoles(){
+        return this.appRoleRepository.findAllByRoleNameIn(List.of("ADMIN", "USER").stream().map(AppRole.mapper).toList());
     }
 
     @PostMapping("/roles")
@@ -58,9 +81,20 @@ public class CrudTesting {
         
     }
 
-    @PostMapping("/users/{id}")
-    public void deleteUser(@PathVariable Integer id){
-        this.appUserRepository.deleteById(id);
+    @GetMapping("bookmarks")
+    public List<Book> findAllBookmarks(){
+        return bookmarkService.findBookmarkedBook("specterfbells@gmail.com");
+    }
+
+    @PostMapping("/bookmarks")
+    public void addBookmarks(){
+         bookmarkService.addBookmark(1, "B00001");
+         bookmarkService.addBookmark(1, "B00002");
+    }
+
+    @DeleteMapping("/bookmarks")
+    public void deleteBookmarks(){
+        this.bookmarkService.deleteBookmark(1, "B00001");
     }
 
 }

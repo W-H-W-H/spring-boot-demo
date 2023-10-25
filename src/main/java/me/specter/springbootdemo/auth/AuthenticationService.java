@@ -69,9 +69,7 @@ public class AuthenticationService {
         ))
         .build();
 
-        System.out.println("[SPTR]: Builded New User");
         AppUser savedUser = appUserRepository.save(user);
-        System.out.println("[SPTR]: Save New User Successfully");
         String jwtAccessToken = jwtService.generateAccessToken(user);
         String jwtRefreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtAccessToken);

@@ -42,7 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        System.out.println("[SPTR]: do JWT filtering ");
 
         final String authHeader = request.getHeader("Authorization");
         final String jwtToken;
@@ -64,7 +63,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .map(t -> !t.getIsExpired() && !t.getIsRevoked())
                     .orElse(false);
                 if(isTokenInDatabaseValid && jwtService.validateToken(jwtToken, userDetails)){
-                    System.out.println("[SPTR]: userDetails.getAuthorities()=%s".formatted(userDetails.getAuthorities()));
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

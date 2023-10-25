@@ -21,6 +21,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import me.specter.springbootdemo.bookmark.Bookmark;
 import me.specter.springbootdemo.role.AppRole;
 import me.specter.springbootdemo.token.Token;
 
@@ -43,7 +44,7 @@ public class AppUser implements UserDetails{
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Email(message = "Email format is not valid")
@@ -59,6 +60,9 @@ public class AppUser implements UserDetails{
 
     private boolean isEnabled;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Bookmark> bookmarks;
+
     // If NOT EAGER, failed when do getAuthorities() otherwise
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -70,6 +74,8 @@ public class AppUser implements UserDetails{
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user") // mappedBy <#Token Bean's Field name#>
     private List<Token> tokens;
+
+
 
     public static final Builder builder = new Builder();
 
@@ -137,6 +143,10 @@ public class AppUser implements UserDetails{
         return this.roles;
     }
 
+    public List<Bookmark> getBookmarks() {
+        return this.bookmarks;
+    }
+
     // @Setter
     public void setId(Integer id) {
         this.id = id;
@@ -160,6 +170,10 @@ public class AppUser implements UserDetails{
 
     public void setRole(Set<AppRole> roles){
         this.roles = roles;
+    }
+
+    public void setBookmarks(List<Bookmark> bookmarks) {
+        this.bookmarks = bookmarks;
     }
 
     // Methods from UserDetails
