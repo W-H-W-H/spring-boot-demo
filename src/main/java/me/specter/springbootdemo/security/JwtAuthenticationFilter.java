@@ -2,11 +2,11 @@ package me.specter.springbootdemo.security;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,19 +20,18 @@ import me.specter.springbootdemo.token.TokenRepository;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final JwtService jwtService;
-    private final AppUserDetailsService userDetailsService;
-    private final TokenRepository tokenRepository;
+    
+    
 
     // @RequireArgsConstructor
     public JwtAuthenticationFilter(
         JwtService jwtService, 
-        AppUserDetailsService userDetailsService,
         TokenRepository tokenRepository
     ){
         this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
-        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -41,49 +40,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         @NonNull HttpServletResponse response, 
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-
-
+        LOGGER.info("JWT Filtering Begin");
         final String authHeader = request.getHeader("Authorization");
         final String jwtToken;
-        final String userEmail;
+        final Authentication authentication;
+        
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
+            LOGGER.info("The authorisation header does not contain JWT");
             filterChain.doFilter(request, response);
             return;
         }
+       
         jwtToken = authHeader.substring(7);
         
         try{
-            userEmail = jwtService.extractUsername(jwtToken);
-
-            // User is not authenticated yet
-            if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
-                UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-                boolean isTokenInDatabaseValid = tokenRepository
-                    .findByToken(jwtToken)
-                    .map(t -> !t.getIsExpired() && !t.getIsRevoked())
-                    .orElse(false);
-                if(isTokenInDatabaseValid && jwtService.validateToken(jwtToken, userDetails)){
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                    );
-
-                    
-
-                    // pass more information to authentication token
-                    authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                    );
-
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-            }
-        }catch(RuntimeException e){
-            System.out.println("catch Exception: " + e.getMessage());
+            authentication = this.jwtService.validateAccessToken(jwtToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            LOGGER.info("Set SecurityContext where authentication=" + authentication);
+        }catch(Exception e){
+            LOGGER.info("Exception caught during validation of JWT " + e.getMessage());
         }
-
-        System.out.println("[SPTR]: Continue to filter");
         filterChain.doFilter(request, response);        
     }
     

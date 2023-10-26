@@ -1,6 +1,5 @@
 package me.specter.springbootdemo.testing;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -11,10 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.persistence.EntityManager;
 import me.specter.springbootdemo.book.Book;
 import me.specter.springbootdemo.book.BookRepository;
-import me.specter.springbootdemo.bookmark.Bookmark;
 import me.specter.springbootdemo.bookmark.BookmarkRepository;
 import me.specter.springbootdemo.bookmark.BookmarkService;
 import me.specter.springbootdemo.role.AppRole;
@@ -25,16 +22,14 @@ import me.specter.springbootdemo.user.AppUser;
 import me.specter.springbootdemo.user.AppUserRepository;
 
 @RestController
-@RequestMapping("/api/v1/crud-test")
-public class CrudTesting {
+@RequestMapping("/api/v1/test")
+public class TestController {
     private final AppRoleRepository appRoleRepository;
     private final AppUserRepository appUserRepository;
     private final TokenRepository tokenRepository;
-    private final BookRepository bookRepository;
-    private final BookmarkRepository bookmarkRepository;
     private final BookmarkService bookmarkService;
 
-    public CrudTesting(
+    public TestController(
         AppRoleRepository appRoleRepository, 
         AppUserRepository appUserRepository,
         TokenRepository tokenRepository,
@@ -45,8 +40,6 @@ public class CrudTesting {
         this.appUserRepository = appUserRepository;
         this.appRoleRepository = appRoleRepository;
         this.tokenRepository = tokenRepository;
-        this.bookRepository = bookRepository;
-        this.bookmarkRepository = bookmarkRepository;
         this.bookmarkService = bookmarkService;
     }
 
@@ -81,7 +74,7 @@ public class CrudTesting {
         
     }
 
-    @GetMapping("bookmarks")
+    @GetMapping("/bookmarks")
     public List<Book> findAllBookmarks(){
         return bookmarkService.findBookmarkedBook("specterfbells@gmail.com");
     }

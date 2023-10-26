@@ -1,17 +1,16 @@
 package me.specter.springbootdemo.auth;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.exc.StreamWriteException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +36,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
     private final AppRoleRepository roleRepository;
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public AuthenticationService(
         PasswordEncoder passwordEncoder, 
@@ -125,8 +125,8 @@ public class AuthenticationService {
     public void refreshToken(
         HttpServletRequest request,
         HttpServletResponse response
-    ) throws StreamWriteException, DatabindException, IOException {
-
+    ) throws Exception {
+        LOGGER.info("Invoking refreshToken Service");
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String userEmail;
@@ -134,22 +134,22 @@ public class AuthenticationService {
             return;
         }
         refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
-        if (userEmail != null) {
-        AppUser user = appUserRepository
+        this.jwtService.validateRefreshToken(refreshToken);
+        
+        userEmail = this.jwtService.extractUsername(refreshToken);
+        AppUser user = this.appUserRepository
             .findByEmail(userEmail)
             .orElseThrow(() -> new UserNotFoundException(
                 "User with email %s is not found".formatted(userEmail)
                 )
             );
-        if (jwtService.validateToken(refreshToken, user)) {
-            String accessToken = jwtService.generateAccessToken(user);
-            revokeAllUserTokens(user);
-            saveUserToken(user, accessToken);
-            AuthenticationResponse authResponse = new AuthenticationResponse(accessToken, refreshToken);
-            new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-        }
-        }
-    }    
+        String accessToken = this.jwtService.generateAccessToken(user);
+        this.revokeAllUserTokens(user);
+        this.saveUserToken(user, accessToken);
+        
+        AuthenticationResponse authResponse = new AuthenticationResponse(accessToken, refreshToken);
+        new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+    } 
+      
 
 }
