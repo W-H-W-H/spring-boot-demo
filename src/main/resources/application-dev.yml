@@ -1,0 +1,39 @@
+spring:
+    # == Datasource ==
+    datasource:
+        url: jdbc:mysql://localhost:3306/simple-library
+        username: simple-library-user
+        password: dummypassword
+    sql:
+        init:
+            mode: always
+    # == Spring Data JPA ==
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: create-drop # create-drop # update
+        defer-datasource-initialization: true
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQLDialect
+    # == Shouldn't be used in Production ==
+    security:
+        user:
+            name: simple-library-user
+            password: dummypassword
+# == Self-defined Configuration ==
+application:
+    allowed-origin: http://localhost:3000
+    security:
+        jwt:
+            secret-key: LdWJhCRsiYBbuFEPlh6g0ssobOFyoDgZGf5Rz9odgA9u/RdQiDpqlnkZjaoTS8F6
+            access-token:
+                expiration: 300000 # 5 minutes
+            refresh-token:
+                expiration: 604800000 # 1 week
+        allowed-api-patterns: >
+            api/v1/auth/**,
+            api/v1/welcome/**,
+            /api/v1/test/**
+        blocked-api-patterns: >
+            

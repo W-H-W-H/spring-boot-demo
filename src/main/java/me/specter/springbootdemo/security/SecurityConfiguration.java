@@ -19,6 +19,8 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+import org.springframework.beans.factory.annotation.Value;
+
 
 @Configuration
 @EnableWebSecurity
@@ -29,6 +31,12 @@ public class SecurityConfiguration {
     private final AppUserDetailsService appUserDetailsService;
     private final LogoutHandler logoutHandler;
 
+    @Value("${application.security.allowed-api-patterns}")
+    private String [] ALLOWING_LIST;
+
+    @Value("${application.security.blocked-api-patterns}")
+    private String [] BLOCKING_LIST;
+
     public SecurityConfiguration(
         JwtAuthenticationFilter jwtAuthenticationFilter, 
         AppUserDetailsService appUserDetailsService,
@@ -38,6 +46,7 @@ public class SecurityConfiguration {
         this.appUserDetailsService = appUserDetailsService;
         this.logoutHandler = logoutHandler;
     }
+
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider) throws Exception {
@@ -46,8 +55,10 @@ public class SecurityConfiguration {
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests( req -> 
             req
-            .requestMatchers("api/v1/auth/**", "api/v1/welcome/**", "/api/v1/test/**").permitAll()
+            .requestMatchers(ALLOWING_LIST).permitAll()
+            // .requestMatchers(BLOCKING_LIST).denyAll()
             .anyRequest().authenticated()
+            
         )
         .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
         .authenticationProvider(authenticationProvider)

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import me.specter.springbootdemo.book.Book;
 import me.specter.springbootdemo.book.BookRepository;
+import me.specter.springbootdemo.book.BookService;
 import me.specter.springbootdemo.bookmark.BookmarkRepository;
 import me.specter.springbootdemo.bookmark.BookmarkService;
 import me.specter.springbootdemo.role.AppRole;
@@ -28,6 +29,8 @@ public class TestController {
     private final AppUserRepository appUserRepository;
     private final TokenRepository tokenRepository;
     private final BookmarkService bookmarkService;
+    private final BookService bookService;
+
 
     public TestController(
         AppRoleRepository appRoleRepository, 
@@ -35,12 +38,20 @@ public class TestController {
         TokenRepository tokenRepository,
         BookRepository bookRepository,
         BookmarkRepository bookmarkRepository,
-        BookmarkService bookmarkService
+        BookmarkService bookmarkService,
+        BookService bookService
     ){
         this.appUserRepository = appUserRepository;
         this.appRoleRepository = appRoleRepository;
         this.tokenRepository = tokenRepository;
         this.bookmarkService = bookmarkService;
+        this.bookService = bookService;
+    }
+
+
+    @GetMapping("/books")
+    public List<Book> getAllBooks(){
+        return this.bookService.findAll();
     }
 
     @GetMapping("/roles")
@@ -76,7 +87,7 @@ public class TestController {
 
     @GetMapping("/bookmarks")
     public List<Book> findAllBookmarks(){
-        return bookmarkService.findBookmarkedBook("specterfbells@gmail.com");
+        return bookmarkService.findBookmarkedBook("waiting.13@gmail.com");
     }
 
     @PostMapping("/bookmarks")

@@ -12,7 +12,6 @@ public class BookService {
     
     private final BookRepository bookRepository;
 
-    // READ
     public BookService(BookRepository bookRepository){
         this.bookRepository = bookRepository;
     }
@@ -47,19 +46,16 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    // CREATE
     public Book createBook(Book book){
         book.setId(null);
         return bookRepository.save(book);
     }
 
-    // DELETE
     public void deleteBook(String id){
         // Doc: If the entity is not found in the persistence store it is silently ignored.
         bookRepository.deleteById(id);
     }
 
-    // UPDATE
     public void updateBook(Book book){
         String id = book.getId();
         Optional<Book> bookFromDB = bookRepository.findById(id);

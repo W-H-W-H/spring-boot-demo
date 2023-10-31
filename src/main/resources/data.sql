@@ -1,11 +1,13 @@
-INSERT INTO 
-book (id, title, isbn) 
-VALUES ('B00001', 'A Military History Of The Western World, Vol. I: From The Earliest Times To The Battle Of Lepanto', '0306803046');
-
-INSERT INTO 
-book (id, title, isbn) 
-VALUES ('B00002', 'History of the Second World War', '0304935646');
-
+INSERT INTO  book (id, title, isbn)  VALUES ('B00001', 'A Military History Of The Western World, Vol. I: From The Earliest Times To The Battle Of Lepanto', '978-0306803048 ');
+INSERT INTO  book (id, title, isbn)  VALUES ('B00002', 'A Military History Of The Western World, Vol. II: From The Defeat Of The Spanish Armada To The Battle Of Waterloo', '978-0306803055');
+INSERT INTO  book (id, title, isbn)  VALUES ('B00003', 'A Military History Of The Western World, Vol. I: From The Earliest Times To The Battle Of Lepanto', '978-0306803048 ');
+INSERT INTO  book (id, title, isbn)  VALUES ('B00004', 'Generalship of Alexander the Great', '978-0306813306');
+INSERT INTO  book (id, title, isbn)  VALUES ('B00005', 'Rust for Rustaceans', '978-1718501850');
+INSERT INTO  book (id, title, isbn)  VALUES ('B00006', 'Strategy: Second Revised Edition', '978-0452010710');
+INSERT INTO  book (id, title, isbn)  VALUES ('B00007', 'Panzer Leader', '978-0306811012');
+INSERT INTO  book (id, title, isbn)  VALUES ('B00008', 'Scipio Africanus: Greater Than Napoleon', '978-0306813634');
+INSERT INTO  book (id, title, isbn)  VALUES ('B00009', 'Spring Boot in Action. First Edition Edition', '978-1617292545');
+INSERT INTO  book (id, title, isbn)  VALUES ('B00010', 'Elixir in Action. First Edition', '978-1617292019');
 
 INSERT INTO
 app_role (id, role_name)

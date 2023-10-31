@@ -40,10 +40,17 @@ public class BookController {
         return bookService.findById(id);
     }
 
-    // http://localhost:8080/book/search?title=<#some title#>
+    // Url: http://localhost:8080/api/v1/books/search?title=<#some title#>
     @GetMapping("/search")
     @PreAuthorize("hasRole('USER')")
-    public List<Book> findAllBooksByTitleContaining(@RequestParam(value = "title", required = true, defaultValue = "") String title){
+    public List<Book> findAllBooksByTitleContaining(
+        @RequestParam(
+            value = "title", 
+            required = true, 
+            defaultValue = ""
+        ) 
+        String title
+    ){
         return bookService.findAllByTitleContaining(title);
     }
 
