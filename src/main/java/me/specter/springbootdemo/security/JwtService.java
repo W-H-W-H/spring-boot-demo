@@ -3,6 +3,7 @@ package me.specter.springbootdemo.security;
 import java.security.Key;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -107,7 +108,10 @@ public class JwtService {
     }
 
     public String generateAccessToken(UserDetails userDetails){
-        return generateAccessToken(Collections.emptyMap() , userDetails);
+
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("roles", userDetails.getAuthorities().stream().map(role -> role.getAuthority()).toList());
+        return generateAccessToken(extraClaims , userDetails);
     }
 
     public String generateAccessToken(

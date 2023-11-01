@@ -1,6 +1,6 @@
-INSERT INTO  book (id, title, isbn)  VALUES ('B00001', 'A Military History Of The Western World, Vol. I: From The Earliest Times To The Battle Of Lepanto', '978-0306803048 ');
+INSERT INTO  book (id, title, isbn)  VALUES ('B00001', 'A Military History Of The Western World, Vol. I: From The Earliest Times To The Battle Of Lepanto', '978-0306803048');
 INSERT INTO  book (id, title, isbn)  VALUES ('B00002', 'A Military History Of The Western World, Vol. II: From The Defeat Of The Spanish Armada To The Battle Of Waterloo', '978-0306803055');
-INSERT INTO  book (id, title, isbn)  VALUES ('B00003', 'A Military History Of The Western World, Vol. I: From The Earliest Times To The Battle Of Lepanto', '978-0306803048 ');
+INSERT INTO  book (id, title, isbn)  VALUES ('B00003', 'A Military History Of The Western World, Vol. III: From the American Civil War to the End of World War II', '978-0306803062');
 INSERT INTO  book (id, title, isbn)  VALUES ('B00004', 'Generalship of Alexander the Great', '978-0306813306');
 INSERT INTO  book (id, title, isbn)  VALUES ('B00005', 'Rust for Rustaceans', '978-1718501850');
 INSERT INTO  book (id, title, isbn)  VALUES ('B00006', 'Strategy: Second Revised Edition', '978-0452010710');

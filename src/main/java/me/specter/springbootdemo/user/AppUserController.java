@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -22,7 +22,7 @@ public class AppUserController {
     }
 
     
-    @GetMapping
+    @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public List<AppUserDto> findAllUsers(){
         return appUserService.findAllUsers();
@@ -36,10 +36,12 @@ public class AppUserController {
     }
 
     
-    @GetMapping("/search")
-    @PreAuthorize("hasRole('ADMIN')")
-    public AppUserDto findUserByEmail(@RequestParam(value = "email", required = true, defaultValue = "") String email){
-        return appUserService.findUserByEmail(email);
+    @GetMapping
+    @PreAuthorize("hasRole('USER')")
+    @PostAuthorize("hasRole('ADMIN') or returnObject.email == authentication.name")
+    public AppUserDto findUserByEmail(){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return appUserService.findUserByEmail(userEmail);
     }
 
     @PutMapping("/enable/{id}")

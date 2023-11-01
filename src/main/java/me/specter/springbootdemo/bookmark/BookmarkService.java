@@ -47,16 +47,16 @@ public class BookmarkService {
         
     }
 
-    public Book addBookmark(Integer userId, String bookId){
+    public Book addBookmark(String userEmail, String bookId){
         Book book = this.bookRepository
             .findById(bookId)
             .orElseThrow(
                 () -> new DataNotFoundException("Book with bookId (%s)".formatted(bookId))
             );
         AppUser user = this.appUserRepository
-            .findById(userId)
+            .findByEmail(userEmail)
             .orElseThrow( 
-                () -> new UserNotFoundException("User with userId=(%d) is not found".formatted(userId)) 
+                () -> new UserNotFoundException("User with userEmail=(%s) is not found".formatted(userEmail)) 
             );
 
         Bookmark bookmark = new Bookmark(book, user, LocalDateTime.now());
@@ -67,10 +67,17 @@ public class BookmarkService {
 
     }
 
-    public void deleteBookmark(Integer userId, String bookId){
+    public void deleteBookmark(String userEmail, String bookId){
+
+        AppUser user = this.appUserRepository
+            .findByEmail(userEmail)
+            .orElseThrow(
+                () -> new UserNotFoundException("User with userEmail=(%s) is not found".formatted(userEmail)) 
+            );
+
 
         Bookmark bookmark = this.bookmarkRepository
-            .findById(new BookmarkId(bookId, userId))
+            .findById(new BookmarkId(bookId, user.getId()))
             .orElseThrow(() -> 
                 new DataNotFoundException("bookmark is not found"
             ));

@@ -3,6 +3,7 @@ package me.specter.springbootdemo.testing;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,7 @@ public class TestController {
 
 
     @GetMapping("/books")
+    @PreAuthorize("hasRole('USER')")
     public List<Book> getAllBooks(){
         return this.bookService.findAll();
     }
@@ -92,13 +94,13 @@ public class TestController {
 
     @PostMapping("/bookmarks")
     public void addBookmarks(){
-         bookmarkService.addBookmark(2, "B00001");
-         bookmarkService.addBookmark(2, "B00002");
+         bookmarkService.addBookmark("specterfbells@gmail.com", "B00001");
+         bookmarkService.addBookmark("specterfbells@gmail.com", "B00002");
     }
 
     @DeleteMapping("/bookmarks")
     public void deleteBookmarks(){
-        this.bookmarkService.deleteBookmark(1, "B00001");
+        this.bookmarkService.deleteBookmark("specterfbells@gmail.com", "B00001");
     }
 
 }

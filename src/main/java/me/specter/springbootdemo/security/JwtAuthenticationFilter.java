@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,9 +40,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         LOGGER.info("JWT Filtering Begin");
-        final String authHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String jwtToken;
         final Authentication authentication;
+
+        LOGGER.info("authHeader is " + authHeader);
         
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             LOGGER.info("The authorisation header does not contain JWT");
