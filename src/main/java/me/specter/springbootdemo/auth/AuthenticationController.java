@@ -1,13 +1,16 @@
 package me.specter.springbootdemo.auth;
 
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -34,11 +37,15 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh-token")
-    public void refreshToken(
-        HttpServletRequest request,
-        HttpServletResponse response
+    public ResponseEntity<AuthenticationResponse> refreshAccessToken(
+        @NotNull @RequestHeader("Refresh-Token") String refreshToken
     ) throws Exception {
-        authenticationService.refreshToken(request, response);
+        Optional<AuthenticationResponse> response =  authenticationService.refreshAccessToken(refreshToken);
+        if(response.isPresent()){
+            return ResponseEntity.ok(response.get());
+        }else{
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
 

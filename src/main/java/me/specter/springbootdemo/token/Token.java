@@ -1,5 +1,6 @@
 package me.specter.springbootdemo.token;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,6 +17,8 @@ public class Token {
     @Id
     @GeneratedValue
     private Integer id;
+
+    @Column(unique=true)
     private String token;
     private boolean isRevoked;
     private boolean isExpired;

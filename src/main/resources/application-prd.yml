@@ -16,11 +16,6 @@ spring:
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.MySQLDialect
-    # == Shouldn't be used in Production ==
-    security:
-        user:
-            name: simple-library-user
-            password: dummypassword
 # == Self-defined Configuration ==
 application:
     allowed-origin: http://localhost:3000

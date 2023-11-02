@@ -59,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             LOGGER.info("Set SecurityContext where authentication=" + authentication);
         }catch(Exception e){
-            LOGGER.info("Exception caught during validation of JWT " + e.getMessage());
+            LOGGER.info("Exception caught during validation of JWT: " + e.getMessage());
         }
         filterChain.doFilter(request, response);        
     }

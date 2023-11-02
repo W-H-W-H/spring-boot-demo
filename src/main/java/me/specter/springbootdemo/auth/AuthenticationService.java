@@ -1,20 +1,16 @@
 package me.specter.springbootdemo.auth;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import me.specter.springbootdemo.error.DataNotFoundException;
 import me.specter.springbootdemo.error.UserNotFoundException;
 import me.specter.springbootdemo.role.AppRoleRepository;
@@ -36,6 +32,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
     private final AppRoleRepository roleRepository;
+
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public AuthenticationService(
@@ -110,6 +107,7 @@ public class AuthenticationService {
     }
 
     private void saveUserToken(AppUser user, String jwtToken) {
+        LOGGER.info("Saved jwtToken=%s".formatted(jwtToken));
         Token tokenInDatabase = new Token(
             null, 
             jwtToken, 
@@ -122,21 +120,16 @@ public class AuthenticationService {
         tokenRepository.save(tokenInDatabase);
     }
 
-    public void refreshToken(
-        HttpServletRequest request,
-        HttpServletResponse response
+    public Optional<AuthenticationResponse> refreshAccessToken(
+        String refreshToken
     ) throws Exception {
-        LOGGER.info("Invoking refreshToken Service");
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String userEmail;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            return;
+        if (refreshToken == null || !refreshToken.startsWith("Bearer ")) {
+            return Optional.empty();
         }
-        refreshToken = authHeader.substring(7);
+        refreshToken = refreshToken.substring(7);
         this.jwtService.validateRefreshToken(refreshToken);
         
-        userEmail = this.jwtService.extractUsername(refreshToken);
+        String userEmail = this.jwtService.extractUsername(refreshToken);
         AppUser user = this.appUserRepository
             .findByEmail(userEmail)
             .orElseThrow(() -> new UserNotFoundException(
@@ -147,8 +140,7 @@ public class AuthenticationService {
         this.revokeAllUserTokens(user);
         this.saveUserToken(user, accessToken);
         
-        AuthenticationResponse authResponse = new AuthenticationResponse(accessToken, refreshToken);
-        new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+        return Optional.of(new AuthenticationResponse(accessToken, refreshToken));
     } 
       
 

@@ -56,10 +56,9 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req
-                                .requestMatchers(ALLOWING_LIST).permitAll()
-                                .requestMatchers(BLOCKING_LIST).denyAll()
-                                .anyRequest().authenticated()
+                    req.requestMatchers(ALLOWING_LIST).permitAll()
+                        .requestMatchers(BLOCKING_LIST).denyAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
