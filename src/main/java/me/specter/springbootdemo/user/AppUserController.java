@@ -25,14 +25,14 @@ public class AppUserController {
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public List<AppUserDto> findAllUsers(){
-        return appUserService.findAllUsers();
+        return this.appUserService.findAllUsers();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     @PostAuthorize("hasRole('ADMIN') or returnObject.email == authentication.name")
     public AppUserDto findUserById(@PathVariable Integer id){
-        return appUserService.findUserById(id);
+        return this.appUserService.findUserById(id);
     }
 
     
@@ -41,19 +41,19 @@ public class AppUserController {
     @PostAuthorize("hasRole('ADMIN') or returnObject.email == authentication.name")
     public AppUserDto findUserByEmail(){
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return appUserService.findUserByEmail(userEmail);
+        return this.appUserService.findUserByEmail(userEmail);
     }
 
     @PutMapping("/enable/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void enableUser(@PathVariable Integer id){
-        appUserService.changeIsEnabled(id, true);
+        this.appUserService.changeIsEnabled(id, true);
     }
 
     @PutMapping("/disable/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void disableUser(@PathVariable Integer id){
-        appUserService.changeIsEnabled(id, false);
+        this.appUserService.changeIsEnabled(id, false);
     }
 
 }

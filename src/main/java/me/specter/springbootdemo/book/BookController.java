@@ -31,13 +31,13 @@ public class BookController {
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     public List<Book> findAllBooks(){
-        return bookService.findAll();
+        return this.bookService.findAll();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     public Book findBookById(@PathVariable String id){
-        return bookService.findById(id);
+        return this.bookService.findById(id);
     }
 
     // Url: http://localhost:8080/api/v1/books/search?title=<#some title#>
@@ -51,27 +51,27 @@ public class BookController {
         ) 
         String title
     ){
-        return bookService.findAllByTitleContaining(title);
+        return this.bookService.findAllByTitleContaining(title);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> createBook(@RequestBody @Valid Book book){ 
-        bookService.createBook(book);
+        this.bookService.createBook(book);
         return ResponseEntity.created(null).build();
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> deleteBook(@PathVariable String id){
-        bookService.deleteBook(id);
+        this.bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
     @PreAuthorize("hasRole('MANAGER')")
     public void updateBook(@RequestBody Book book) {    
-        bookService.updateBook(book);
+        this.bookService.updateBook(book);
     }
 
 }

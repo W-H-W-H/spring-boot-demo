@@ -30,13 +30,13 @@ public class LogoutHandlerComponent implements LogoutHandler{
         }
         jwtToken = authHeader.substring(7);
         
-        tokenRepository.findByToken(jwtToken)
+        this.tokenRepository.findByToken(jwtToken)
             .stream()
             .forEach( 
                 t -> {
                     t.setIsExpired(true);
                     t.setIsRevoked(true);
-                    tokenRepository.save(t);
+                    this.tokenRepository.save(t);
                 } 
             );
     }

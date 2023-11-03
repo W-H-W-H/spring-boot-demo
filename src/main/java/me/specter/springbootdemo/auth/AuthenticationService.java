@@ -51,13 +51,13 @@ public class AuthenticationService {
         this.roleRepository = roleRepository;
     }
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public void register(RegisterRequest request) {
 
         AppUser user = AppUser.builder
         .setId(null)
         .setEmail(request.userEmail())
         .setDisplayName(request.displayName())
-        .setPassword(passwordEncoder.encode(request.password()))
+        .setPassword(this.passwordEncoder.encode(request.password()))
         .setIsEnabled(true)
         .setRoles(Set.of(
             this.roleRepository
@@ -66,34 +66,34 @@ public class AuthenticationService {
         ))
         .build();
 
-        AppUser savedUser = appUserRepository.save(user);
-        String jwtAccessToken = jwtService.generateAccessToken(user);
-        String jwtRefreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(savedUser, jwtAccessToken);
-        return new AuthenticationResponse(jwtAccessToken, jwtRefreshToken);
+        this.appUserRepository.save(user);
+        //AppUser savedUser = appUserRepository.save(user);
+        // String jwtAccessToken = jwtService.generateAccessToken(savedUser);
+        // String jwtRefreshToken = jwtService.generateRefreshToken(savedUser);
+        // saveUserToken(savedUser, jwtAccessToken);
+        //return new AuthenticationResponse(jwtAccessToken, jwtRefreshToken);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         
-        authenticationManager.authenticate(
+        this.authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.userEmail(), request.password())
         );
 
-        AppUser user = appUserRepository
+        AppUser user = this.appUserRepository
             .findByEmail(request.userEmail())
             .orElseThrow(
                 () -> new UserNotFoundException("User with email=%s is not found".formatted(request.userEmail()))
             );     
-        String jwtAccessToken = jwtService.generateAccessToken(user);
-        String jwtRefreshToken = jwtService.generateRefreshToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwtAccessToken);
-
+        String jwtAccessToken = this.jwtService.generateAccessToken(user);
+        String jwtRefreshToken = this.jwtService.generateRefreshToken(user);
+        this.revokeAllUserTokens(user);
+        this.saveUserToken(user, jwtAccessToken);
         return new AuthenticationResponse(jwtAccessToken, jwtRefreshToken);
     }
 
     private void revokeAllUserTokens(AppUser user){
-        List<Token> validTokens = tokenRepository.findAllValidToken(user.getId());
+        List<Token> validTokens = this.tokenRepository.findAllValidToken(user.getId());
         if (!validTokens.isEmpty()){
             validTokens.stream()
                 .forEach( 
@@ -102,7 +102,7 @@ public class AuthenticationService {
                         token.setIsRevoked(true);
                     }
                 );
-            tokenRepository.saveAll(validTokens);
+            this.tokenRepository.saveAll(validTokens);
         }
     }
 
@@ -117,7 +117,7 @@ public class AuthenticationService {
             user
         );
 
-        tokenRepository.save(tokenInDatabase);
+        this.tokenRepository.save(tokenInDatabase);
     }
 
     public Optional<AuthenticationResponse> refreshAccessToken(

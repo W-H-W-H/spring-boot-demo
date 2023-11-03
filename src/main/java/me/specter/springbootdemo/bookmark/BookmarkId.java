@@ -24,11 +24,11 @@ public class BookmarkId implements Serializable{
     }
 
     public String getBookId() {
-        return bookId;
+        return this.bookId;
     }
 
     public Integer getUserId() {
-        return userId;
+        return this.userId;
     }
 
     public void setBookId(String bookId) {

@@ -62,11 +62,11 @@ public class SecurityConfiguration {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout ->
                         logout
                                 .logoutUrl("/api/v1/auth/logout")
-                                .addLogoutHandler(logoutHandler)
+                                .addLogoutHandler(this.logoutHandler)
                                 .logoutSuccessHandler((request, response, authentication) ->
                                         SecurityContextHolder.clearContext()
                                 )
@@ -79,7 +79,7 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(appUserDetailsService);
+        authenticationProvider.setUserDetailsService(this.appUserDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return authenticationProvider;
     }

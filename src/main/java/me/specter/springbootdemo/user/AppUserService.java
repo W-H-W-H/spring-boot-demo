@@ -19,14 +19,14 @@ public class AppUserService {
     }
 
     public List<AppUserDto> findAllUsers(){
-        return appUserRepository.findAll()
+        return this.appUserRepository.findAll()
             .stream()
             .map(u -> new AppUserDto(u))
             .collect(Collectors.toList());
     }
 
     public AppUserDto findUserById(Integer id){
-        Optional<AppUser> user =  appUserRepository.findById(id);
+        Optional<AppUser> user =  this.appUserRepository.findById(id);
         if(user.isPresent()){
             return user.map(u -> new AppUserDto(u)).get();
         }else{
@@ -35,7 +35,7 @@ public class AppUserService {
     }
 
     public AppUserDto findUserByEmail(String email){
-        Optional<AppUser> user =  appUserRepository.findByEmail(email);
+        Optional<AppUser> user =  this.appUserRepository.findByEmail(email);
         if(user.isPresent()){
             return user.map(u -> new AppUserDto(u)).get();
         }else{
@@ -44,7 +44,7 @@ public class AppUserService {
     }
 
     public void changeIsEnabled(Integer id, Boolean isEnabled) {
-        AppUser user =  appUserRepository
+        AppUser user =  this.appUserRepository
             .findById(id)
             .orElseThrow(
                 () ->new UserNotFoundException("User with id(%s) is not found".formatted(id))

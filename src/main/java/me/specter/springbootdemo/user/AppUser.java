@@ -189,12 +189,12 @@ public class AppUser implements UserDetails{
 
     @Override
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return this.email;
     }
 
     @Override
@@ -214,7 +214,7 @@ public class AppUser implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return isEnabled;
+        return this.isEnabled;
     }
     
 }

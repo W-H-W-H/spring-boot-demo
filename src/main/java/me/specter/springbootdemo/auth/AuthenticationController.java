@@ -23,24 +23,25 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
+    public ResponseEntity<Void> register(
         @RequestBody RegisterRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.register(request));
+        this.authenticationService.register(request);
+        return ResponseEntity.created(null).build();
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
         @RequestBody AuthenticationRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+        return ResponseEntity.ok(this.authenticationService.authenticate(request));
     }
 
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthenticationResponse> refreshAccessToken(
         @NotNull @RequestHeader("Refresh-Token") String refreshToken
     ) throws Exception {
-        Optional<AuthenticationResponse> response =  authenticationService.refreshAccessToken(refreshToken);
+        Optional<AuthenticationResponse> response =  this.authenticationService.refreshAccessToken(refreshToken);
         if(response.isPresent()){
             return ResponseEntity.ok(response.get());
         }else{

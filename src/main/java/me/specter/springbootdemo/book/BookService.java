@@ -18,7 +18,7 @@ public class BookService {
 
     public Book findByIsbn(String isbn){
 
-        Optional<Book> book = bookRepository.findByIsbn(isbn);
+        Optional<Book> book = this.bookRepository.findByIsbn(isbn);
 
         if (book.isEmpty()){
             throw new DataNotFoundException("Book (isbn=%s) is not exist".formatted(isbn));
@@ -28,12 +28,12 @@ public class BookService {
     }
 
     public List<Book> findAllByTitleContaining(String title){
-        return bookRepository.findAllByTitleContaining(title);
+        return this.bookRepository.findAllByTitleContaining(title);
     }
 
     public Book findById(String id){
         
-        Optional<Book> book = bookRepository.findById(id);
+        Optional<Book> book = this.bookRepository.findById(id);
 
         if (book.isEmpty()){
             throw new DataNotFoundException("Book %s is not exist");
@@ -43,24 +43,24 @@ public class BookService {
     }
 
     public List<Book> findAll(){
-        return bookRepository.findAll();
+        return this.bookRepository.findAll();
     }
 
     public Book createBook(Book book){
         book.setId(null);
-        return bookRepository.save(book);
+        return this.bookRepository.save(book);
     }
 
     public void deleteBook(String id){
         // Doc: If the entity is not found in the persistence store it is silently ignored.
-        bookRepository.deleteById(id);
+        this.bookRepository.deleteById(id);
     }
 
     public void updateBook(Book book){
         String id = book.getId();
-        Optional<Book> bookFromDB = bookRepository.findById(id);
+        Optional<Book> bookFromDB = this.bookRepository.findById(id);
         if(bookFromDB.isPresent()){
-            bookRepository.save(book);
+            this.bookRepository.save(book);
         }else{
             throw new DataNotFoundException("book %s does not exist".formatted(id));
         }

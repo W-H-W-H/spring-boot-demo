@@ -81,8 +81,8 @@ public class JwtService {
         final Date issuedAt = extractClaims(jwtToken, Claims::getIssuedAt);
         final Date now = new Date();
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-        boolean isTokenInDatabaseValid = isTokenNotInDB || tokenRepository
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+        boolean isTokenInDatabaseValid = isTokenNotInDB || this.tokenRepository
                 .findByToken(jwtToken)
                 .map(t -> !t.getIsExpired() && !t.getIsRevoked())
                 .orElse(false)

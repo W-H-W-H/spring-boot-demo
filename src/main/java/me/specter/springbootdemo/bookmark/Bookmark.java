@@ -65,19 +65,19 @@ public class Bookmark {
     }
 
     public BookmarkId getId() {
-        return id;
+        return this.id;
     }
 
     public LocalDateTime getLastUpdated() {
-        return lastUpdated;
+        return this.lastUpdated;
     }
 
     public Book getBook() {
-        return book;
+        return this.book;
     }
 
     public AppUser getUser() {
-        return user;
+        return this.user;
     }
 
     
