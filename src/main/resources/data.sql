@@ -23,7 +23,7 @@ VALUES ('R0003', 'MANAGER');
 
 INSERT INTO
 app_user (id, email, display_name, password, is_enabled)
-VALUES (1, 'specterfbells@gmail.com', 'Super Admin', '$2a$10$xO9r5vq.HwwHWugVxWj22uq30GwhcIUC.f32zgEEzSmETSlCTUfii', true);
+VALUES (1, 'waiting.14@gmail.com', 'Super Admin', '$2a$10$xO9r5vq.HwwHWugVxWj22uq30GwhcIUC.f32zgEEzSmETSlCTUfii', true);
 
 INSERT INTO
 app_user (id, email, display_name, password, is_enabled)
