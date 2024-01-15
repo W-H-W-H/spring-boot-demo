@@ -1,0 +1,26 @@
+# Remember, docker compose is useful for development and small application
+# docker compose version
+version: '3'
+
+# Network are created by docker compose automatically
+
+# List all Services
+services:
+  simple-library-db:
+     # build: . # Another option: Image by a Dockerfile
+    image: mysql
+    volumes:
+      - simple-library-db-volume:/var/lib/mysql
+    ports:
+     - 3306:3306
+    environment:
+     - MYSQL_ROOT_PASSWORD=dummypassword
+     - MYSQL_USER=simple-library-user
+     - MYSQL_PASSWORD=dummypassword
+     - MYSQL_DATABASE=simple-library
+    # depends_on: some-other-service # This service depends on some-other-service
+  
+
+# List all Volumes
+volumes:
+  simple-library-db-volume:
