@@ -1,15 +1,15 @@
 spring:
     # == Datasource ==
     datasource:
-        url: jdbc:mysql://localhost:3306/simple-library
-        username: simple-library-user
-        password: dummypassword
+        url: jdbc:mysql://${RDS_HOSTNAME:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:simple-library}
+        username: ${RDS_USERNAME:simple-library-user}
+        password: ${RDS_PASSWORD:dummypassword}
     #sql:
         #init:
             #mode: always
     # == Spring Data JPA ==
     jpa:
-        #show-sql: true
+        show-sql: true
         hibernate:
             ddl-auto: update
         defer-datasource-initialization: true
@@ -18,7 +18,7 @@ spring:
                 dialect: org.hibernate.dialect.MySQLDialect
 # == Self-defined Configuration ==
 application:
-    allowed-origin: http://localhost:3000
+    allowed-origin: \*
     security:
         jwt:
             secret-key: LdWJhCRsiYBbuFEPlh6g0ssobOFyoDgZGf5Rz9odgA9u/RdQiDpqlnkZjaoTS8F6
@@ -27,7 +27,7 @@ application:
             refresh-token:
                 expiration: 604800000 # 1 week
         allowed-api-patterns: >
-            api/v1/auth/**,
-            api/v1/welcome/**
+            /api/v1/auth/**,
+            /api/v1/welcome/**
         blocked-api-patterns: >
             /api/v1/test/**
